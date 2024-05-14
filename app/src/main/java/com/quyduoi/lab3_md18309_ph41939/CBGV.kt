@@ -1,21 +1,22 @@
 package com.quyduoi.lab3_md18309_ph41939
 
-class CBGV (
+class CBGV(
     hoTen: String,
-    tuoi: Int,
-    queQuan: String,
+    tuoi: Int?,
+    queQuan: String?,
     maSo: String,
-    var luongCung: Int,
-    var luongThuong: Int,
-    var tienPhat: Int
+    val luongCung: Float,
+    val luongThuong: Float? = 0f,
+    val tienPhat: Float? = 0f
 ) : Nguoi(hoTen, tuoi, queQuan, maSo) {
-    var luongThucLinh: Int = 0
+
+    val luongThucLinh: Float
 
     init {
-        tinhLuongThucLinh()
+        luongThucLinh = tinhLuongThucLinh()
     }
 
-    private fun tinhLuongThucLinh() {
-        luongThucLinh = luongCung + luongThuong - tienPhat
+    private fun tinhLuongThucLinh(): Float {
+        return luongCung + (luongThuong ?: 0f) - (tienPhat ?: 0f)
     }
 }

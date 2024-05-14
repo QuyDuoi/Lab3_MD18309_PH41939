@@ -29,7 +29,6 @@ class QuanLyTheMuon {
                     "   Thông tin sinh viên: ${theMuon.sinhVien.hoTen} - Tuổi: ${theMuon.sinhVien.tuoi} - Lớp: ${theMuon.sinhVien.lop}")
         }
     }
-
 }
 
 fun isValidDate(date: String): Boolean {
@@ -67,7 +66,15 @@ fun main() {
         println("0. Thoát")
 
         print("Nhập lựa chọn của bạn: ")
-        choice = scanner.nextInt()
+        while (true) {
+            try {
+                choice = scanner.nextInt()
+                break
+            } catch (e: Exception) {
+                println("Lựa chọn không hợp lệ. Vui lòng nhập lại:")
+                scanner.nextLine()
+            }
+        }
 
         when (choice) {
             1 -> {
@@ -78,6 +85,7 @@ fun main() {
                 var ngayMuon = scanner.next()
                 while (!isValidDate(ngayMuon)) {
                     println("Ngày không hợp lệ. Vui lòng nhập lại.")
+                    print("Nhập ngày mượn (dd/mm): ")
                     ngayMuon = scanner.next()
                 }
                 print("Nhập hạn trả (dd/mm): ")
@@ -85,19 +93,21 @@ fun main() {
                 while (!isValidDate(hanTra) || !isValidDueDate(ngayMuon, hanTra)) {
                     if (!isValidDate(hanTra)) {
                         println("Ngày không hợp lệ. Vui lòng nhập lại.")
+                        print("Nhập hạn trả (dd/mm): ")
                     } else {
                         println("Ngày hết hạn phải sau ngày mượn. Vui lòng nhập lại.")
+                        print("Nhập hạn trả (dd/mm): ")
                     }
                     hanTra = scanner.next()
                 }
                 print("Nhập số hiệu sách: ")
                 val soHieuSach = scanner.next()
-                scanner.nextLine() // Đọc bỏ ký tự newline còn lại trong buffer
+                scanner.nextLine()
                 print("Nhập họ tên sinh viên: ")
                 val hoTen = scanner.nextLine()
-                print("Nhập tuổi sinh viên: ")
                 var tuoi: Int? = null
                 while (tuoi == null) {
+                    print("Nhập tuổi sinh viên: ")
                     val input = scanner.next()
                     if (input.toIntOrNull() != null) {
                         tuoi = input.toInt()
@@ -105,7 +115,7 @@ fun main() {
                         println("Tuổi phải là một số. Vui lòng nhập lại.")
                     }
                 }
-                scanner.nextLine() // Đọc bỏ ký tự newline còn lại trong buffer
+                scanner.nextLine()
                 print("Nhập lớp sinh viên: ")
                 val lop = scanner.nextLine()
 
@@ -132,6 +142,3 @@ fun main() {
         }
     } while (choice != 0)
 }
-
-
-

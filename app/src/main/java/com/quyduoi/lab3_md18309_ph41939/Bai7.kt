@@ -18,11 +18,18 @@ class QuanLyCBGV {
         }
     }
 
-
     fun hienThiDS() {
         println("Danh sách giáo viên:")
         danhSachCBGV.forEach {
-            println("${it.hoTen} - Mã số: ${it.maSo} - Lương thực lĩnh: ${it.luongThucLinh}")
+            println("Họ tên: ${it.hoTen}")
+            println("Tuổi: ${it.tuoi ?: "Không có thông tin"}")
+            println("Quê quán: ${it.queQuan ?: "Không có thông tin"}")
+            println("Mã số: ${it.maSo}")
+            println("Lương cứng: ${String.format("%.2f", it.luongCung)}")
+            println("Lương thưởng: ${it.luongThuong?.let { luong -> String.format("%.2f", luong) } ?: "Không có thông tin"}")
+            println("Tiền phạt: ${it.tienPhat?.let { phat -> String.format("%.2f", phat) } ?: "Không có thông tin"}")
+            println("Lương thực lĩnh: ${String.format("%.2f", it.luongThucLinh)}")
+            println("------------")
         }
     }
 }
@@ -31,8 +38,7 @@ fun main() {
     val quanLy = QuanLyCBGV()
     val scanner = Scanner(System.`in`)
 
-    var choice: Int
-    do {
+    while (true) {
         println("\n--- Menu ---")
         println("1. Thêm giáo viên")
         println("2. Xóa giáo viên")
@@ -40,31 +46,25 @@ fun main() {
         println("0. Thoát")
 
         print("Nhập lựa chọn của bạn: ")
-        choice = scanner.nextInt()
+        val choice = scanner.nextLine().toIntOrNull()
 
         when (choice) {
             1 -> {
                 println("\n--- Thêm giáo viên ---")
-                print("Nhập họ tên: ")
-                val hoTen = scanner.nextLine()
-                scanner.nextLine()
-                print("Nhập tuổi: ")
-                val tuoi = scanner.nextInt()
-                scanner.nextLine()
-                print("Nhập quê quán: ")
-                val queQuan = scanner.nextLine()
-                scanner.nextLine()
-                print("Nhập mã số: ")
-                val maSo = scanner.nextLine()
-                print("Nhập lương cứng: ")
-                val luongCungInput = scanner.nextLine()
-                val luongCung = if (luongCungInput.isNotBlank()) luongCungInput.toInt() else 0
-                print("Nhập lương thưởng: ")
-                val luongThuongInput = scanner.nextLine()
-                val luongThuong = if (luongThuongInput.isNotBlank()) luongThuongInput.toInt() else 0
-                print("Nhập tiền phạt: ")
-                val tienPhatInput = scanner.nextLine()
-                val tienPhat = if (tienPhatInput.isNotBlank()) tienPhatInput.toInt() else 0
+
+                val hoTen = getStringInput(scanner, "Nhập họ tên: ")
+
+                val tuoi = getOptionalIntInput(scanner, "Nhập tuổi: ")
+
+                val queQuan = checkRong(scanner, "Nhập quê quán: ")
+
+                val maSo = getStringInput(scanner, "Nhập mã số: ")
+
+                val luongCung = getFloatInput(scanner, "Nhập lương cứng: ")
+
+                val luongThuong = getOptionalFloatInput(scanner, "Nhập lương thưởng: ")
+
+                val tienPhat = getOptionalFloatInput(scanner, "Nhập tiền phạt: ")
 
                 val giaoVien = CBGV(hoTen, tuoi, queQuan, maSo, luongCung, luongThuong, tienPhat)
                 quanLy.themCBGV(giaoVien)
@@ -72,9 +72,8 @@ fun main() {
             }
             2 -> {
                 println("\n--- Xóa giáo viên ---")
-                print("Nhập mã số giáo viên cần xóa: ")
-                val maSoGV = scanner.nextLine()
-                scanner.nextLine()
+
+                val maSoGV = getStringInput(scanner, "Nhập mã số giáo viên cần xóa: ")
 
                 quanLy.xoaCBGV(maSoGV)
             }
@@ -83,10 +82,67 @@ fun main() {
             }
             0 -> {
                 println("Kết thúc chương trình.")
+                break
             }
             else -> {
                 println("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
             }
         }
-    } while (choice != 0)
+    }
+}
+
+fun getStringInput(scanner: Scanner, prompt: String): String {
+    while (true) {
+        print(prompt)
+        val input = scanner.nextLine()
+        if (input.isNotBlank()) return input
+        println("Giá trị không được để trống. Vui lòng nhập lại.")
+    }
+}
+
+fun checkRong (scanner: Scanner, prompt: String) : String? {
+    println(prompt)
+    val input = scanner.nextLine()
+    if (input.isBlank()) {
+        return null
+    } else {
+        return input.toString()
+    }
+}
+fun getOptionalIntInput(scanner: Scanner, prompt: String): Int? {
+    while (true) {
+        print(prompt)
+        val input = scanner.nextLine()
+        if (input.isBlank()) return null
+        try {
+            return input.toInt()
+        } catch (e: NumberFormatException) {
+            println("Giá trị không hợp lệ. Vui lòng nhập lại.")
+        }
+    }
+}
+
+fun getFloatInput(scanner: Scanner, prompt: String): Float {
+    while (true) {
+        print(prompt)
+        val input = scanner.nextLine()
+        try {
+            return input.toFloat()
+        } catch (e: NumberFormatException) {
+            println("Giá trị không hợp lệ. Vui lòng nhập lại.")
+        }
+    }
+}
+
+fun getOptionalFloatInput(scanner: Scanner, prompt: String): Float? {
+    while (true) {
+        print(prompt)
+        val input = scanner.nextLine()
+        if (input.isBlank()) return null
+        try {
+            return input.toFloat()
+        } catch (e: NumberFormatException) {
+            println("Giá trị không hợp lệ. Vui lòng nhập lại.")
+        }
+    }
 }
