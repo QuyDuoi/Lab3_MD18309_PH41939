@@ -1,4 +1,5 @@
-import com.quyduoi.lab3_md18309_ph41939.CBGV
+package com.quyduoi.lab3_md18309_ph41939.BaiTapBuoi3
+
 import java.util.Scanner
 
 class QuanLyCBGV {
